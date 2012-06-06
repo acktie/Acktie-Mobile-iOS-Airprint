@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: Appcelerator module that enables apps to print via Apple Airprint.
+author: Tony Nuzzi
+license: See LICENSE file
+copyright: Copyright ©2012 Acktie, LLC, All Rights Reserved
+
+
+# these should not be edited
+name: acktie mobile ios airprint
+moduleid: com.acktie.mobile.ios.airprint
+guid: e30249f1-8ddc-4230-afa9-2357c105c92a
+platform: iphone
+minsdk: 1.8.2
