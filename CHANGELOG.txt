@@ -1,1 +1,2 @@
 1.0: First Released Version
+1.1: Fixed an issue with print from a file.  Updated docs.

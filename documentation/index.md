@@ -31,7 +31,13 @@ The following are the valid properties that can be passed into the print functio
 ##### file or url (required)
 The following property is a required arguement for the print function to work.  This arguement tells the module which document to print and from which location.
 
-file - a local file on the device. (NOTE: This is relative to the "Resources" directory)
+file - a local file on the device. 
+
+**NOTE**: file will only print documents from the application document directory.  If you are downloading the file from the internet some like: 
+
+	var filename = Ti.Filesystem.applicationDataDirectory + remoteFilename;
+	// Dummy method you need to write your own
+	downloadFile(url, filename);
 
 url - a remote url on the network
 
@@ -75,6 +81,9 @@ Example:
 ## Known issues
 iPad - When changing the orientation the print dialog box does not re-display in the correct location.  NOTE: this does not effect print functionality.
 
+Local file location - There is a limitation on where local files can be printed from.  Currently, the local file need to be in the documents directory
+(Ti.Filesystem.applicationDataDirectory) under the application.  If you have documents packaged with your app you will need to move them to the documents
+directory before printing.  This can be a 1 time action.
 
 ## Author
 

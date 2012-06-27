@@ -36,16 +36,20 @@
 	
 	NSLog(@"[INFO] %@ loaded",self);
     
+    /*
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(orientationDidChange:)
                                                  name: UIApplicationDidChangeStatusBarOrientationNotification
                                                object: nil];
+     */
 }
 
 - (void) orientationDidChange: (NSNotification *) note
 {
+    /*
     UIInterfaceOrientation orientation = [[[note userInfo] objectForKey: UIApplicationStatusBarOrientationUserInfoKey] integerValue];
     NSLog(@"Rotated!");
+     */
 }
 
 -(void)shutdown:(id)sender
@@ -91,21 +95,20 @@
     
     if([args objectForKey:@"file"] != nil)
     {
-        NSString *path = [TiUtils stringValue:[args objectForKey:@"file"]];
+        NSString* fileString = [TiUtils stringValue:[args objectForKey:@"file"]];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                             NSUserDomainMask,
+                                                             YES);
         
-        file = [NSString stringWithFormat:@"%@%@/%@", 
-                               [[[NSURL fileURLWithPath:path] absoluteString] stringByReplacingOccurrencesOfString:path withString:@""], 
-                               [[NSBundle mainBundle] resourcePath], 
-                path, nil];
+        file = [[paths lastObject] stringByAppendingPathComponent:fileString];
         
-        NSURL *url = [NSURL URLWithString:[file stringByAddingPercentEscapesUsingEncoding:NSStringEncodingConversionExternalRepresentation]];
-        
-        document = [NSData dataWithContentsOfURL:url];
+        document = [NSData dataWithContentsOfFile:file];
     }
     else if([args objectForKey:@"url"] != nil)
     {
         file = [TiUtils stringValue:[args objectForKey:@"url"]];
         NSURL *url = [NSURL URLWithString:file];
+        
         document = [NSData dataWithContentsOfURL:url];
     }
     NSLog([NSString stringWithFormat:@"file: %@", file]);
