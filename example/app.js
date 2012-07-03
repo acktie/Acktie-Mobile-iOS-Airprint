@@ -71,7 +71,8 @@ airprintWebPage.addEventListener('click', function() {
 			file.write(webview.toImage());
 
 			printer.print({
-				file : 'printFile.jpg', 
+				file : 'printFile.jpg',
+				keepScale: 'false', 
 				navBarButton: rightbutton,
 				sentToPrinter : function(result) // Specify a callback to receive event when user prints or cancels the dialog
 				{

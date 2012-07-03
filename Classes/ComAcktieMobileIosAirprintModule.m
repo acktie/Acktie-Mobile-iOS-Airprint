@@ -314,7 +314,7 @@ NSString* jobName = nil;
         printInfo.jobName = jobName;
         printInfo.duplex = UIPrintInfoDuplexLongEdge;
         printController.printInfo = printInfo;
-        printController.showsPageRange = YES;
+        printController.showsPageRange = displayPageRange;
         
         printController.printingItem = document;
         [self openPrintDialog];

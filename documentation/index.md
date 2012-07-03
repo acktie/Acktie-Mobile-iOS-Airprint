@@ -47,7 +47,15 @@ One of the arguments needs to be specified but not both.
 This property tells the print dialog whether or not to show the page range option.  The page range option is the option where the user can specify the pages to print from
 a multi-page document.
 
-Can be either true or false. 
+Can be either true or false.  The default is true.
+
+##### keepScale (optional)
+This property will attempt to print the image in it's original scale and size.  When printing lower res/size images the airprint feature tends to scale them out to the printer paper size.   As result
+it will pixelate the image.  To prevent this from happening keepScale with print the image at its native size.  As a result, it will print the image in the middle of the page.
+
+*NOTE*: This is only for images.
+
+Can be either true or false.  The default is false. 
 
 ##### jobName (optional)
 This property give you the option to customize the job name displayed in the print manager.  If one is not given the filename (file.ext (e.g print.pdf)) is used.
