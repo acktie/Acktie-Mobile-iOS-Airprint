@@ -44,4 +44,46 @@ airprintFromUrl.addEventListener('click', function() {
 });
 window.add(airprintFromUrl);
 
+var airprintWebPage = Titanium.UI.createButton({
+	title : 'Print webpage from toImage',
+	height : 40,
+	width : '100%',
+	top : 120
+});
+airprintWebPage.addEventListener('click', function() {
+		var url = 'http://www.google.com';
+		var win = Ti.UI.createWindow({
+			fullscreen : true,
+			title : 'Google',
+			backgroundColor : 'white'
+		});
+		var webview = Ti.UI.createWebView({
+			url : url
+		});
+		win.add(webview);
+		self.containingTab.open(win);
+		
+		var rightbutton = Ti.UI.createButton({systemButton: Titanium.UI.iPhone.SystemButton.ACTION});
+		win.rightNavButton = rightbutton;
+		
+		rightbutton.addEventListener('click', function() {
+			var file = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, "printFile.jpg");
+			file.write(webview.toImage());
+
+			printer.print({
+				file : 'printFile.jpg', 
+				navBarButton: rightbutton,
+				sentToPrinter : function(result) // Specify a callback to receive event when user prints or cancels the dialog
+				{
+					if(result.completed)
+						alert("User submitted to printer");
+					else
+						alert("User cancelled print request");
+				},
+			});
+		});
+
+});
+window.add(airprintFromUrl);
+
 window.open();

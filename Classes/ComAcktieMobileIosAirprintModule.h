@@ -6,11 +6,16 @@
  */
 #import "TiModule.h"
 
-@interface ComAcktieMobileIosAirprintModule : TiModule <UIPrintInteractionControllerDelegate>
+@interface ComAcktieMobileIosAirprintModule : TiModule <UIPrintInteractionControllerDelegate, UIWebViewDelegate>
 {
     @private KrollCallback *sentToPrinter;
 }
 
--(void)print: (id)args;
+-(void) print: (id)args;
+-(id) canPrint;
+- (NSData *) convertImageToPDF: (UIImage *) image;
+- (NSData *) convertImageToPDF: (UIImage *) image withResolution: (double) resolution;
+- (NSData *) convertImageToPDF: (UIImage *) image withHorizontalResolution: (double) horzRes verticalResolution: (double) vertRes;
+- (NSData *) convertImageToPDF: (UIImage *) image withResolution: (double) resolution maxBoundsRect: (CGRect) boundsRect pageSize: (CGSize) pageSize;
 
 @end

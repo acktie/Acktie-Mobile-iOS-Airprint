@@ -52,8 +52,12 @@ Can be either true or false.
 ##### jobName (optional)
 This property give you the option to customize the job name displayed in the print manager.  If one is not given the filename (file.ext (e.g print.pdf)) is used.
 
-##### view (Required for iPad)
-This property specifies where to display the print dialog pop-up on an iPad.  This option is ignored on the iPhone so it is safe to specify it all the time for universal apps.
+##### view or navBarButton(Required for iPad)
+This property specifies where to display the print dialog pop-up on an iPad.  These options are ignored on the iPhone so it is safe to specify it all the time for universal apps.
+
+navBarButton must be a button assigned to the navigation bar.  If you want the print pop-up on a button in the middle of a view use the view option.
+
+See app.js for examples.
 
 #### Callbacks (optional)
 
@@ -79,7 +83,7 @@ Example:
 
 
 ## Known issues
-iPad - When changing the orientation the print dialog box does not re-display in the correct location.  NOTE: this does not effect print functionality.
+iPad - When changing the orientation the print dialog box does not re-display in the correct location (only if you use view option, works correctly for navbarbutton.).  NOTE: this does not effect print functionality.
 
 Local file location - There is a limitation on where local files can be printed from.  Currently, the local file need to be in the documents directory
 (Ti.Filesystem.applicationDataDirectory) under the application.  If you have documents packaged with your app you will need to move them to the documents
