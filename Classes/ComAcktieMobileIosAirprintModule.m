@@ -25,6 +25,13 @@ NSData *document = nil;
 BOOL displayPageRange = true;
 NSString* jobName = nil;
 
+//Support for text
+BOOL isTextFile = false;
+BOOL isMarkup = false;
+CGFloat fontSize = 12.0f;
+UITextAlignment textAlign = UITextAlignmentLeft;
+
+
 // PDF Create from Image
 - (NSData *) convertImageToPDF: (UIImage *) image withResolution: (double) resolution {
     return [self convertImageToPDF: image withHorizontalResolution: resolution verticalResolution: resolution];
@@ -213,6 +220,51 @@ NSString* jobName = nil;
     document = nil;
     displayPageRange = true;
     jobName = nil;
+    isTextFile = false;
+    isMarkup = false;
+    fontSize = 12.0f;
+    textAlign = UITextAlignmentLeft;
+}
+
+- (void) processTextArgs: (id) args
+{
+    ENSURE_SINGLE_ARG_OR_NIL(args, NSDictionary);
+    
+    NSDictionary* text = [args objectForKey:@"text"];
+    if(text != nil)
+    {
+        isTextFile = true;
+        
+        if([text objectForKey:@"isMarkup"] != nil)
+        {
+            isMarkup = [TiUtils boolValue:[text objectForKey:@"isMarkup"]];
+        }
+        
+        if([text objectForKey:@"fontSize"] != nil)
+        {
+            fontSize = [TiUtils floatValue:[text objectForKey:@"fontSize"]];
+        }
+        
+        if([text objectForKey:@"textAlign"] != nil)
+        {
+            NSString *textAlignment = [TiUtils stringValue:[text objectForKey:@"textAlign"]];
+            
+            if ([textAlignment caseInsensitiveCompare:@"left"] == NSOrderedSame) {
+                textAlign = UITextAlignmentLeft;
+            }
+            else if ([textAlignment caseInsensitiveCompare:@"center"] == NSOrderedSame) {
+                textAlign = UITextAlignmentCenter;
+            }
+            else if ([textAlignment caseInsensitiveCompare:@"right"] == NSOrderedSame) {
+                textAlign = UITextAlignmentRight;
+            }
+        }
+    }
+    
+    NSLog([NSString stringWithFormat:@"isTextFile: %d", isTextFile]);
+    NSLog([NSString stringWithFormat:@"isMarkup: %d", isMarkup]);
+    NSLog([NSString stringWithFormat:@"fontSize: %f", fontSize]);
+    NSLog([NSString stringWithFormat:@"textAlign: %d", textAlign]);
 }
 
 #pragma Public APIs
@@ -303,9 +355,11 @@ NSString* jobName = nil;
         [sentToPrinter retain];
     }
     
+    [self processTextArgs:args];
+    
     printController = [UIPrintInteractionController sharedPrintController];
     
-    if(printController && [UIPrintInteractionController canPrintData:document]) {
+    if(printController && ([UIPrintInteractionController canPrintData:document] || isTextFile)) {
         
         printController.delegate = self;
         
@@ -316,7 +370,47 @@ NSString* jobName = nil;
         printController.printInfo = printInfo;
         printController.showsPageRange = displayPageRange;
         
-        printController.printingItem = document;
+        if(isTextFile)
+        {
+            NSLog(@"Inside isTextFile");
+            
+            NSString* dataAsString = [[NSString alloc] initWithData:document encoding:NSASCIIStringEncoding];
+            UIEdgeInsets insets = UIEdgeInsetsMake(36.0, 36.0, 36.0, 36.0);
+            CGFloat maxContentWidth = 7 * 72.0;
+            
+            if(isMarkup)
+            {
+                NSLog(@"Inside isMarkup:true");
+                
+                UIMarkupTextPrintFormatter* markupFormatter = [[UIMarkupTextPrintFormatter alloc] initWithMarkupText:dataAsString];
+                markupFormatter.startPage = 0;
+                markupFormatter.contentInsets = insets;
+                markupFormatter.maximumContentWidth = maxContentWidth;
+                printController.printFormatter = markupFormatter;
+                [markupFormatter release];   
+            }
+            else
+            {
+                NSLog(@"Inside isMarkup:false");
+                
+                UISimpleTextPrintFormatter* textFormatter = [[UISimpleTextPrintFormatter alloc] initWithText:dataAsString];
+                textFormatter.startPage = 0;
+                textFormatter.contentInsets = insets;
+                textFormatter.maximumContentWidth = maxContentWidth;
+                textFormatter.textAlignment = textAlign;
+                UIFont* font = [[UIFont alloc] fontWithSize:fontSize];
+                textFormatter.font = font;
+                printController.printFormatter = textFormatter;
+                
+                [textFormatter release];
+                [font release];
+            }
+        }
+        else
+        {
+            printController.printingItem = document;
+        }
+                
         [self openPrintDialog];
     }
 }

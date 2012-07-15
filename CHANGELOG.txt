@@ -1,4 +1,5 @@
 1.0: First Released Version
 1.1: Fixed an issue with print from a file.  Updated docs.
 1.2: Added example for printing from webview.  Added navBarButton feature. Updated docs.
-1.3 Fixing a scaling issue when printing small images.  Added flag keepScale as an options.
+1.3: Fixing a scaling issue when printing small images.  Added flag keepScale as an options.
+1.4: Added support for printing plain text files or text files with markup (i.e. html tag formatted)
