@@ -11,8 +11,8 @@
     @private KrollCallback *sentToPrinter;
 }
 
--(void) print: (id)args;
--(id) canPrint;
+- (void) print: (id)args;
+- (id) canPrint;
 - (NSData *) convertImageToPDF: (UIImage *) image;
 - (NSData *) convertImageToPDF: (UIImage *) image withResolution: (double) resolution;
 - (NSData *) convertImageToPDF: (UIImage *) image withHorizontalResolution: (double) horzRes verticalResolution: (double) vertRes;

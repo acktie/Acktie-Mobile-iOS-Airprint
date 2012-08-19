@@ -1,11 +1,7 @@
-// Example of using Acktie Mobile Airprint
-
-// Import
 var printer = require("com.acktie.mobile.ios.airprint");
 
 var plainText = "This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. \n This is sample data for a text file \n This is sample data for a text file \n This is sample data for a text file \n This is sample data for a text file \n";
 var markupText = "<h1>Sample Text</h1><br/>This is <i>sample</i> data for a text file. <p>This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file. This is sample data for a text file.</p><img border=\"0\" src=\"https://app-direct-www-cloudfront.s3.amazonaws.com/app_resources/2648/thumbs_64/img5786968329042998192.png\" />";
-
 // open a single window
 var window = Ti.UI.createWindow({
 	backgroundColor : 'white'
@@ -19,7 +15,7 @@ var airprintFromLocalFile = Titanium.UI.createButton({
 });
 
 airprintFromLocalFile.addEventListener('click', function() {
-	printer.print({file: "lorem.pdf",        // To use copy to the iphone simulator app documents directory
+	printer.print({file: "lorem.pdf", 
 				   displayPageRange: false,  // Turn of selectable page range
 				   jobName: 'Custom JobName: lorem.pdf', // Give a custom job name.  By default, it will be the file name
 				   view: airprintFromLocalFile});
@@ -104,7 +100,7 @@ airprintWebPage.addEventListener('click', function() {
 window.add(airprintWebPage);
 
 var airprintTextFile = Titanium.UI.createButton({
-	title : 'Print Plain text file from local directory',
+	title : 'Print text file from local (landscape)',
 	height : 40,
 	width : '100%',
 	top : 150
@@ -131,6 +127,7 @@ airprintTextFile.addEventListener('click', function() {
 					fontSize: 18.0       // default is 12.0
 				},
 				file : filename,
+				orientation: 'landscape',
 				view: airprintTextFile,
 				sentToPrinter : function(result) // Specify a callback to receive event when user prints or cancels the dialog
 				{

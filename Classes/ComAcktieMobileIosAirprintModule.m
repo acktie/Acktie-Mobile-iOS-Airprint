@@ -30,6 +30,7 @@ BOOL isTextFile = false;
 BOOL isMarkup = false;
 CGFloat fontSize = 12.0f;
 UITextAlignment textAlign = UITextAlignmentLeft;
+UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
 
 
 // PDF Create from Image
@@ -224,6 +225,8 @@ UITextAlignment textAlign = UITextAlignmentLeft;
     isMarkup = false;
     fontSize = 12.0f;
     textAlign = UITextAlignmentLeft;
+    orientation = UIPrintInfoOrientationPortrait;
+
 }
 
 - (void) processTextArgs: (id) args
@@ -320,7 +323,7 @@ UITextAlignment textAlign = UITextAlignmentLeft;
     
     if([args objectForKey:@"jobName"] != nil)
     {
-        jobName = [TiUtils stringValue:[args objectForKey:@"jobName"]];;
+        jobName = [TiUtils stringValue:[args objectForKey:@"jobName"]];
     }
     else
     {
@@ -355,6 +358,20 @@ UITextAlignment textAlign = UITextAlignmentLeft;
         [sentToPrinter retain];
     }
     
+    if([args objectForKey:@"orientation"] != nil)
+    {
+        NSString* orient = [TiUtils stringValue:[args objectForKey:@"orientation"]];
+        
+        if ([orient caseInsensitiveCompare:@"landscape"] == NSOrderedSame) {
+            orientation = UIPrintInfoOrientationLandscape;
+        }
+        else if ([orient caseInsensitiveCompare:@"portait"] == NSOrderedSame) {
+            orientation = UIPrintInfoOrientationPortrait;
+            
+        }
+    }
+     NSLog([NSString stringWithFormat:@"orientation: (0 = Portrait and 1 = Landscape) %d", orientation]);
+    
     [self processTextArgs:args];
     
     printController = [UIPrintInteractionController sharedPrintController];
@@ -367,6 +384,7 @@ UITextAlignment textAlign = UITextAlignmentLeft;
         printInfo.outputType = UIPrintInfoOutputGeneral;
         printInfo.jobName = jobName;
         printInfo.duplex = UIPrintInfoDuplexLongEdge;
+        printInfo.orientation = orientation;
         printController.printInfo = printInfo;
         printController.showsPageRange = displayPageRange;
         
@@ -415,8 +433,9 @@ UITextAlignment textAlign = UITextAlignmentLeft;
     }
 }
 
--(id)canPrint
+-(id) canPrint
 {
     return NUMBOOL([UIPrintInteractionController isPrintingAvailable]);
 }
+    
 @end

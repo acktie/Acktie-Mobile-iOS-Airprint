@@ -99,6 +99,16 @@ Can be either true or false.  The default is false.
 #### jobName (optional)
 This property give you the option to customize the job name displayed in the print manager.  If one is not given the filename (file.ext (e.g print.pdf)) is used.
 
+#### orientation (optional)
+This property give you the option to set the print orientaton.  Valid options are: 'landscape' or 'portrait'
+
+For example:
+
+orienation: 'landscape'
+
+The default is portrait.
+
+
 #### view or navBarButton(Required for iPad)
 This property specifies where to display the print dialog pop-up on an iPad.  These options are ignored on the iPhone so it is safe to specify it all the time for universal apps.
 
@@ -143,6 +153,7 @@ directory before printing.  This can be a 1 time action.
 *  1.2: Added example for printing from webview.  Added navBarButton feature. Updated docs.
 *  1.3: Fixing a scaling issue when printing small images.  Added flag keepScale as an options.
 *  1.4: Added support for printing plain text files or text files with markup (i.e. html tag formatted)
+*  1.5: Added print orientation property
 
 ## Author
 
