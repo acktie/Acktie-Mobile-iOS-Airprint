@@ -24,6 +24,7 @@ NSString *webPage = nil;
 NSData *document = nil;
 BOOL displayPageRange = true;
 NSString* jobName = nil;
+BOOL isImage = false;
 
 //Support for text
 BOOL isTextFile = false;
@@ -223,6 +224,7 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
     jobName = nil;
     isTextFile = false;
     isMarkup = false;
+    isImage = false;
     fontSize = 12.0f;
     textAlign = UITextAlignmentLeft;
     orientation = UIPrintInfoOrientationPortrait;
@@ -296,10 +298,19 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
         
         file = [[paths lastObject] stringByAppendingPathComponent:fileString];
     
-        if(keepScale && ![[file pathExtension] isEqualToString:@"pdf"])
-        {            
-            UIImage *image = [UIImage imageWithContentsOfFile:file];
-            document = [self convertImageToPDF: image];
+        if([[file pathExtension] isEqualToString:@"png"] || [[file pathExtension] isEqualToString:@"jpg"] || [[file pathExtension] isEqualToString:@"tiff"] || [[file pathExtension] isEqualToString:@"tif"] || [[file pathExtension] isEqualToString:@"bmp"])
+        {
+            isImage = true;
+            
+            if(keepScale)
+            {
+                UIImage *image = [UIImage imageWithContentsOfFile:file];
+                document = [self convertImageToPDF: image];
+            }
+            else
+            {
+                document = [NSData dataWithContentsOfFile:file];
+            }
         }
         else
         {
@@ -381,20 +392,39 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
         printController.delegate = self;
         
         printInfo = [UIPrintInfo printInfo];
-        printInfo.outputType = UIPrintInfoOutputGeneral;
         printInfo.jobName = jobName;
-        printInfo.duplex = UIPrintInfoDuplexLongEdge;
         printInfo.orientation = orientation;
         printController.printInfo = printInfo;
         printController.showsPageRange = displayPageRange;
+        
+        if(isImage)
+        {
+            printInfo.outputType = UIPrintInfoOutputPhoto;
+        }
+        else
+        {
+            printInfo.outputType = UIPrintInfoOutputGeneral;
+        }
         
         if(isTextFile)
         {
             NSLog(@"Inside isTextFile");
             
             NSString* dataAsString = [[NSString alloc] initWithData:document encoding:NSASCIIStringEncoding];
-            UIEdgeInsets insets = UIEdgeInsetsMake(36.0, 36.0, 36.0, 36.0);
-            CGFloat maxContentWidth = 7 * 72.0;
+            
+            UIEdgeInsets insets;
+            CGFloat maxContentWidth;
+            
+            if(orientation == UIPrintInfoOrientationPortrait)
+            {
+                insets = UIEdgeInsetsMake(36.0, 36.0, 36.0, 36.0);
+                maxContentWidth = 7 * 72.0;
+            }
+            else
+            {
+                insets = UIEdgeInsetsMake(18.0, 18.0, 18.0, 18.0);
+                maxContentWidth = 9 * 72.0;
+            }
             
             if(isMarkup)
             {
