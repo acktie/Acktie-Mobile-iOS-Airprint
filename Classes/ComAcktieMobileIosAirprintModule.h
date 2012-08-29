@@ -7,9 +7,9 @@
 #import "TiModule.h"
 
 @interface ComAcktieMobileIosAirprintModule : TiModule <UIPrintInteractionControllerDelegate, UIWebViewDelegate>
-{
-    @private KrollCallback *sentToPrinter;
-}
+{}
+
+@property (nonatomic, readwrite, retain) KrollCallback* sentToPrinter;
 
 - (void) print: (id)args;
 - (id) canPrint;

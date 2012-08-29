@@ -13,6 +13,7 @@
 #import "TiUiWebView.h"
 
 @implementation ComAcktieMobileIosAirprintModule
+@synthesize sentToPrinter;
 
 int webViewLoads_ = 0;
 UIPrintInteractionController *printController = nil;
@@ -158,6 +159,7 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
 
 -(void)dealloc
 {
+    sentToPrinter = nil;
 	// release any resources that have been retained by the module
 	[super dealloc];
 }
@@ -175,7 +177,6 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
 {
     void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error) 
     {
-        id listener = [[sentToPrinter retain] autorelease];
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
         [dictionary setObject:NUMBOOL(completed) forKey:@"completed"];
         NSLog(@"completionHandler, completed? : %d", completed);
@@ -189,7 +190,7 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
         }
         
         NSLog(@"Calling Callback");
-        [self _fireEventToListener:@"sentToPrinter" withObject:dictionary listener:listener thisObject:nil];
+        [self _fireEventToListener:@"sentToPrinter" withObject:dictionary listener:sentToPrinter thisObject:nil];
     };
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) 
@@ -212,6 +213,7 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
 
 - (void) initVariables
 {
+    sentToPrinter = nil;
     webViewLoads_ = 0;
     printController = nil;
     printInfo = nil;
@@ -228,7 +230,6 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
     fontSize = 12.0f;
     textAlign = UITextAlignmentLeft;
     orientation = UIPrintInfoOrientationPortrait;
-
 }
 
 - (void) processTextArgs: (id) args
@@ -364,9 +365,9 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
     {
         NSLog(@"Received sentToPrinter callback");
         
-        sentToPrinter = [args objectForKey:@"sentToPrinter"];
-        ENSURE_TYPE_OR_NIL(sentToPrinter,KrollCallback);
-        [sentToPrinter retain];
+        id callback = [args objectForKey:@"sentToPrinter"];
+        ENSURE_TYPE_OR_NIL(callback, KrollCallback);
+        [self setSentToPrinter:callback];
     }
     
     if([args objectForKey:@"orientation"] != nil)
@@ -453,6 +454,8 @@ UIPrintInfoOrientation orientation = UIPrintInfoOrientationPortrait;
                 [textFormatter release];
                 [font release];
             }
+            
+            [dataAsString autorelease];
         }
         else
         {
