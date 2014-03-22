@@ -2,4 +2,5 @@ tmp
 bin
 build
 *.zip
-acktie mobile ios airprint.xcodeproj/project.xcworkspace/xcuserdata/TNuzzi.xcuserdatad/UserInterfaceState.xcuserstate
+acktie mobile ios airprint.xcodeproj/project.xcworkspace
+acktie mobile ios airprint.xcodeproj/xcuserdata
